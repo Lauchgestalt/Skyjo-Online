@@ -1,0 +1,63 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "concurrently \"npm run start:client\" \"npm run start:server\"",
+    "start:client": "react-scripts start",
+    "start:server": "node server/components/server.js",
+    "build": "react-scripts build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "^6.7.1",
+    "@fortawesome/react-fontawesome": "^0.2.2",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.0.1",
+    "@testing-library/user-event": "^14.5.2",
+    "axios": "^1.7.8",
+    "bootstrap": "^5.3.3",
+    "cardsJS": "^1.1.1",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "crypto-browserify": "^3.12.1",
+    "dompurify": "^3.2.2",
+    "express": "^4.21.1",
+    "firebase": "^11.0.2",
+    "font-awesome": "^4.7.0",
+    "http": "^0.0.1-security",
+    "motion": "^11.13.1",
+    "react": "^18.3.1",
+    "react-bootstrap": "^2.10.6",
+    "react-copy-to-clipboard": "^5.1.0",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.0.2",
+    "react-scripts": "5.0.1",
+    "react-transition-group": "^4.4.5",
+    "sass": "^1.81.1",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
+    "styled-components": "^6.1.13",
+    "uuid": "^11.0.3",
+    "web-vitals": "^4.2.4"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+  }
+}
