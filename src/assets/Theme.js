@@ -63,6 +63,7 @@ const darkTheme = {
             green: '#7ED321',
             yellow: '#F5A623',
             red: '#D0021B',
+            moon: '#4A90E2',
         }
     },
     neumorphism: {
@@ -80,13 +81,14 @@ const colorfulTheme = {
     colors: {
         ...defaults.colors,
         background: '#f39bd7',
-        text: '#fff',
+        text: '#373737',
         accentText: '#333',
         accentColors: {
             blue: '#769ECB',
             green: '#90C978',
             yellow: '#F9CC74',
             red: '#F07F78',
+            moon: '#f39bd7',
         }
     },
     neumorphism: {

@@ -1,84 +1,79 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-
-const generateEmptyGrid = () => {
-    return Array.from({ length: 12 }).map((_, index) => ({
-        id: index,
-        value: "",
-        active: false
-    }));
-};
+import { default as CardComponent } from './Card';
 
 const GridContainer = styled.div`
-    margin: 10px auto;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-    gap: 15px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: repeat(3, minmax(0, 1fr));
+    grid-gap: 1rem;
+    height: 35dvh;
+    width: 35vw;
 
-    max-height: 35dvh;
-    max-width: 30vw;
+    transition: width 0.5s;
+
+    @media (max-width: 1200px) {
+        max-height: 40dvh;
+        width: 40vw;
+    }
+
+    @media (max-width: 1100px) {
+        max-height: 45dvh;
+        width: 45vw;
+    }
 
     @media (max-width: 992px) {
         max-height: 45dvh;
-        max-width: 35vw;
+        width: 50vw;
     }
     
-    @media (max-width: 768px) {
+    @media (max-width: 825px) {
         max-height: 55dvh;
-        max-width: 50vw;
+        width: 65vw;
     }
 
-    @media (max-width: 576px) {
+    @media (max-width: 640px) {
         max-height: 65dvh;
-        max-width: 80vw;
-    }
-
-    @media (max-width: 360px) {
-        max-height: 75dvh;
-        max-width: 90vw;
+        width: 95vw;
     }
 `;
 
-const Card = styled.div`
-    text-align: center;
-    aspect-ratio: 2.5 / 3.5;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    user-select: none;
-    min-width: 50px;
+const Card = styled(CardComponent)`
+    aspect-ratio: 63 / 88;
+    height: 100%;
+    min-height: 0;
+    min-width: 0;
+    position: relative;
 `;
 
-const CardValue = styled.h5`
-    font-size: 1.5rem;
-    font-weight: 500;
-    pointer-events: none;
-`;
-
-const Grid = ({ cards, own=false, onClickFunction }) => {
-    const [cardState, setCardState] = useState(cards || generateEmptyGrid());
-
-    const handleClick = (id) => {
-        if (own) {
-            setCardState((prevCards) =>
-                prevCards.map((card, index) =>
-                    index === id ? { ...card, active: true } : card
-                )
-            );
+const Grid = ({ cardArray, onClick, state }) => {
+    const generateEmptyGrid = () => {
+        let cardArray = [];
+        for (let i = 0; i < 12; i++) {
+            cardArray.push({ id: i, text: i, isVisible: false });
         }
-    };
+        return cardArray;
+    }
 
     return (
         <GridContainer>
-            {cardState.map((card, id) => (
-                <Card key={id} className={`neumorphism ` + (card.active ? 'active' : '')} onClick={onClickFunction ? onClickFunction : handleClick(id)}>
-                    {card.active && <CardValue className="card-value">{card.value}</CardValue>}
-                </Card>
-            ))}
+            {cardArray ? (
+                cardArray.map((card, index) => {
+                    const isSelected = state.includes(index);
+                    return (
+                        <CardComponent key={index} className={isSelected ? 'selected' : ''} cardData={card} onClick={() => onClick(index)} />
+                    )
+                })
+            ) : (
+                generateEmptyGrid().map((card, index) => {
+                    const isSelected = state.includes(index);
+                    return (
+                        <CardComponent key={index} className={isSelected ? 'selected' : ''} cardData={card} onClick={() => onClick(index)} />
+                    )
+                })
+            )}
         </GridContainer>
-    );
-};
+    )
+}
 
-export default Grid;
+export default Grid

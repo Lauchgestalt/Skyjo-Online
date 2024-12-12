@@ -7,6 +7,7 @@ import App from './App';
 import Theme from './assets/Theme';
 import GlobalStyle from './assets/GlobalStyle';
 import Fonts from './assets/Fonts';
+import { ToastContextProvider } from './contexts/ToastContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -14,7 +15,9 @@ root.render(
     <Fonts />
     <Theme>
       <GlobalStyle />
-      <App />
+      <ToastContextProvider>
+        <App />
+      </ToastContextProvider>
     </Theme>
   </React.StrictMode>
 );

@@ -4,6 +4,8 @@ import styled, { keyframes } from 'styled-components'
 import { Spinner } from 'react-bootstrap'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 
+import { useToast } from '../hooks/useToast'
+
 import socket from '../socket'
 import Grid from '../components/Grid'
 
@@ -143,6 +145,7 @@ const LobbyContainer = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    text-align: center;
 `
 
 const CopyIcon = styled(FontAwesomeIcon)`
@@ -177,6 +180,10 @@ const CodeContainer = styled.div`
     margin-top: 20px;
     font-weight: ${props => props.theme.fontWeights.bold};
     user-select: none;
+    background: ${props => props.theme.neumorphism.pressedBackground};
+    border-radius: ${props => props.theme.neumorphism.borderRadius};
+    box-shadow: ${props => props.theme.neumorphism.inverseBoxShadow};
+    padding: 10px;
 
     p {
         margin: 0;
@@ -188,6 +195,8 @@ const CodeContainer = styled.div`
 const Lobby = () => {
     const [gameState, setGameState] = useState(null)
     const [selectedCards, setSelectedCards] = useState([])
+
+    const toast = useToast()
 
     const navigate = useNavigate()
 
@@ -209,14 +218,22 @@ const Lobby = () => {
     }, [])
 
     const selectedCardsHandler = (id) => {
+        if (id > 12 || id < 0) {
+            return
+        }
         if (selectedCards.includes(id)) {
             setSelectedCards(selectedCards.filter(card => card !== id))
         } else {
             if(selectedCards.length >= 3) {
+                toast.warning('You can only select 3 cards you fucking idiot. It\'s not that hard to count to 3.');
                 return
             }
             setSelectedCards([...selectedCards, id])
         }
+    }
+
+    const handleCopy = () => {
+        toast.success('Room code copied to clipboard')
     }
 
     if (!gameState) {
@@ -226,21 +243,23 @@ const Lobby = () => {
     return (
         <LobbyContainer>
             <h4>Waiting for other players...</h4>
-            <Hand>
+            <Hand className='mb-4'>
                 <LobbyCard className="card-1"><span></span></LobbyCard>
                 <LobbyCard className="card-2"><span></span></LobbyCard>
                 <LobbyCard className="card-3"><span></span></LobbyCard>
             </Hand>
 
+            <h5 className='mb-4'>Select 3 cards you want to reveal once the game begins:</h5>
 
-            <CodeContainer>
+            <Grid state={selectedCards} onClick={selectedCardsHandler} />
+
+            <CodeContainer className='mb-2'>
                 <p>{gameState.roomCode}</p>
-                <CopyToClipboard text={gameState.roomCode}>
+                <CopyToClipboard onCopy={handleCopy} text={gameState.roomCode}>
                     <CopyIcon icon={faCopy} />
                 </CopyToClipboard>
             </CodeContainer>
 
-            <Grid onClickFunction={() => selectedCardsHandler()}own></Grid>
         </LobbyContainer>
     )
 }

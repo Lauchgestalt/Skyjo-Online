@@ -10,13 +10,13 @@ const ThemeToggleContainer = styled.div`
     padding: 0px 3px;
     border-radius: 20px;
     position: relative;
-    border: 2px solid #95a5a6;
+    border: 2px solid ${props => props.theme.colors.text};
     `;
 
 const ThemeToggleLabel = styled.label`
     text-align: center;
     display: inline-block;
-    color: #95a5a6;
+    color: ${props => props.theme.colors.text};
     position: relative;
     z-index: 2;
     margin: 0;
@@ -32,17 +32,17 @@ const ThemeToggleInput = styled.input`
     height: 100%;
 
     &[value="light"]:checked ~ span {
-        background: #bbbb11;
+        background: ${props => props.theme.colors.accentColors.yellow};
         left: 3px;
     }
     
     &[value="color"]:checked ~ span {
-        background: #ee5599;
+        background: ${props => props.theme.colors.accentColors.red};
         left: 23px;
     }
     
     &[value="dark"]:checked ~ span {
-        background: #555;
+        background: ${props => props.theme.colors.accentColors.moon};
         left: 41px;
     }
 
