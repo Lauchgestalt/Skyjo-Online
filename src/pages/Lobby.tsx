@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from 'react'
-import styled, { keyframes } from 'styled-components'
+import React, { useState, useEffect } from "react";
+import styled, { keyframes } from "styled-components";
 
-import { Spinner } from 'react-bootstrap'
-import { CopyToClipboard } from 'react-copy-to-clipboard'
+import { Spinner } from "react-bootstrap";
 
-import { useToast } from '../hooks/useToast'
+import { useToast } from "../hooks/useToast";
 
-import socket from '../socket'
-import Grid from '../components/Grid'
+import socket from "../socket";
+import Grid from "../components/Grid";
 
-import { faCopy } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useNavigate } from 'react-router-dom'
+import { faCopy } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useNavigate } from "react-router-dom";
 
 const card1Anim = keyframes`
     0% {
@@ -35,7 +34,7 @@ const card1Anim = keyframes`
         transform: translateX(-10px);
         z-index: 2;
     }
-`
+`;
 
 const card2Anim = keyframes`
     0% {
@@ -58,7 +57,7 @@ const card2Anim = keyframes`
         transform: translateX(-10px);
         z-index: 1;
     }
-`
+`;
 
 const card3Anim = keyframes`
     0% {
@@ -82,13 +81,13 @@ const card3Anim = keyframes`
     83.33333% {
         transform: translateX(115px) rotate(15deg);
     }
-`
+`;
 
 const Hand = styled.div`
     height: 100px;
     position: relative;
     margin-right: 70px;
-`
+`;
 
 const LobbyCard = styled.div`
     font-size: 22px;
@@ -117,7 +116,7 @@ const LobbyCard = styled.div`
 
     &.card-1 {
         z-index: 3;
-        background-color: ${props => props.theme.colors.accentColors.green};
+        background-color: ${(props) => props.theme.colors.accentColors.green};
         margin-left: 20px;
         animation-duration: 6s;
         animation-name: ${card1Anim};
@@ -125,7 +124,7 @@ const LobbyCard = styled.div`
     }
     &.card-2 {
         z-index: 2;
-        background-color: ${props => props.theme.colors.accentColors.yellow};
+        background-color: ${(props) => props.theme.colors.accentColors.yellow};
         margin-left: 10px;
         animation-duration: 6s;
         animation-name: ${card2Anim};
@@ -133,12 +132,12 @@ const LobbyCard = styled.div`
     }
     &.card-3 {
         z-index: 1;
-        background-color: ${props => props.theme.colors.accentColors.red};
+        background-color: ${(props) => props.theme.colors.accentColors.red};
         animation-duration: 6s;
         animation-name: ${card3Anim};
         animation-iteration-count: infinite;
     }
-`
+`;
 
 const LobbyContainer = styled.div`
     display: flex;
@@ -146,31 +145,31 @@ const LobbyContainer = styled.div`
     justify-content: center;
     align-items: center;
     text-align: center;
-`
+`;
 
 const CopyIcon = styled(FontAwesomeIcon)`
     cursor: pointer;
     transition: color 0.2s ease;
     padding: 10px;
-    background: ${props => props.theme.colors.background};
-    box-shadow: ${props => props.theme.neumorphism.boxShadow};
-    border-radius: ${props => props.theme.neumorphism.borderRadius};
+    background: ${(props) => props.theme.colors.background};
+    box-shadow: ${(props) => props.theme.neumorphism.boxShadow};
+    border-radius: ${(props) => props.theme.neumorphism.borderRadius};
 
     &:hover {
-        background: ${props => props.theme.neumorphism.pressedBackground};
-        }
+        background: ${(props) => props.theme.neumorphism.pressedBackground};
+    }
 
     &:active {
-        box-shadow: ${props => props.theme.neumorphism.inverseBoxShadow};
+        box-shadow: ${(props) => props.theme.neumorphism.inverseBoxShadow};
     }
-`
+`;
 
 const LoadingIcon = styled.div`
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-`
+`;
 
 const CodeContainer = styled.div`
     display: flex;
@@ -178,90 +177,114 @@ const CodeContainer = styled.div`
     align-items: center;
     gap: 5px;
     margin-top: 20px;
-    font-weight: ${props => props.theme.fontWeights.bold};
+    font-weight: ${(props) => props.theme.fontWeights.bold};
     user-select: none;
-    background: ${props => props.theme.neumorphism.pressedBackground};
-    border-radius: ${props => props.theme.neumorphism.borderRadius};
-    box-shadow: ${props => props.theme.neumorphism.inverseBoxShadow};
+    background: ${(props) => props.theme.neumorphism.pressedBackground};
+    border-radius: ${(props) => props.theme.neumorphism.borderRadius};
+    box-shadow: ${(props) => props.theme.neumorphism.inverseBoxShadow};
     padding: 10px;
 
     p {
         margin: 0;
         margin-right: 5px;
-        user-select: all
+        user-select: all;
     }
-    `
+`;
+
+interface GameState {
+    roomCode: string;
+    // Add other properties of gameState here if needed
+}
 
 const Lobby = () => {
-    const [gameState, setGameState] = useState(null)
-    const [selectedCards, setSelectedCards] = useState([])
+    const [gameState, setGameState] = useState<GameState | null>(null);
+    const [selectedCards, setSelectedCards] = useState<number[]>([]);
 
-    const toast = useToast()
+    const toast = useToast();
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     useEffect(() => {
-        socket.emit('getGameState')
+        socket.emit("getGameState");
 
-        socket.on('updateGameState', (response) => {
-            if (response.success) {
-                setGameState(response.gameState)
-            } else {
-                console.error(response.error)
-                navigate('/')
+        socket.on(
+            "updateGameState",
+            (response: {
+                success: boolean;
+                gameState: any;
+                error?: string;
+            }) => {
+                if (response.success) {
+                    setGameState(response.gameState);
+                } else {
+                    console.error(response.error);
+                    navigate("/");
+                }
             }
-        })
+        );
 
         return () => {
-            socket.off('updateGameState')
-        }
-    }, [])
+            socket.off("updateGameState");
+        };
+    }, []);
 
-    const selectedCardsHandler = (id) => {
+    const selectedCardsHandler = (id: number) => {
         if (id > 12 || id < 0) {
-            return
+            return;
         }
         if (selectedCards.includes(id)) {
-            setSelectedCards(selectedCards.filter(card => card !== id))
+            setSelectedCards(selectedCards.filter((card) => card !== id));
         } else {
-            if(selectedCards.length >= 3) {
-                toast.warning('You can only select 3 cards you fucking idiot. It\'s not that hard to count to 3.');
-                return
+            if (selectedCards.length >= 3) {
+                toast.warning(
+                    "You can only select 3 cards you fucking idiot. It's not that hard to count to 3."
+                );
+                return;
             }
-            setSelectedCards([...selectedCards, id])
+            setSelectedCards([...selectedCards, id]);
         }
-    }
+    };
 
-    const handleCopy = () => {
-        toast.success('Room code copied to clipboard')
-    }
+    const handleCopy = async (text: string) => {
+        await navigator.clipboard.writeText(text);
+        toast.success("Room code copied to clipboard");
+    };
 
     if (!gameState) {
-        return <LoadingIcon><Spinner role='status' /></LoadingIcon>
+        return (
+            <LoadingIcon>
+                <Spinner role="status" />
+            </LoadingIcon>
+        );
     }
 
     return (
         <LobbyContainer>
             <h4>Waiting for other players...</h4>
-            <Hand className='mb-4'>
-                <LobbyCard className="card-1"><span></span></LobbyCard>
-                <LobbyCard className="card-2"><span></span></LobbyCard>
-                <LobbyCard className="card-3"><span></span></LobbyCard>
+            <Hand className="mb-4">
+                <LobbyCard className="card-1">
+                    <span></span>
+                </LobbyCard>
+                <LobbyCard className="card-2">
+                    <span></span>
+                </LobbyCard>
+                <LobbyCard className="card-3">
+                    <span></span>
+                </LobbyCard>
             </Hand>
 
-            <h5 className='mb-4'>Select 3 cards you want to reveal once the game begins:</h5>
+            <h5 className="mb-4">
+                Select 3 cards you want to reveal once the game begins:
+            </h5>
 
             <Grid state={selectedCards} onClick={selectedCardsHandler} />
 
-            <CodeContainer className='mb-2'>
+            <CodeContainer className="mb-2">
                 <p>{gameState.roomCode}</p>
-                <CopyToClipboard onCopy={handleCopy} text={gameState.roomCode}>
-                    <CopyIcon icon={faCopy} />
-                </CopyToClipboard>
+                <CopyIcon onClick={() => handleCopy(gameState.roomCode)} icon={faCopy} />
             </CodeContainer>
-
         </LobbyContainer>
-    )
-}
+    );
+};
 
-export default Lobby
+export default Lobby;
