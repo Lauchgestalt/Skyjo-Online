@@ -1,4 +1,3 @@
-import React from 'react';
 import Toast from './Toast';
 import styled from 'styled-components';
 import { ToastType } from '../types/toast';

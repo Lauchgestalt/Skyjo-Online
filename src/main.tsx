@@ -1,13 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "font-awesome/css/font-awesome.min.css";
-import "./assets/index.css";
 import App from "./App";
 
-import Theme from "./assets/Theme";
+import Theme from "./contexts/ThemeContextProvider";
 import GlobalStyle from "./assets/GlobalStyle";
 import Fonts from "./assets/Fonts";
-import { ToastContextProvider } from "./contexts/ToastContext";
+import { ToastContextProvider } from "./contexts/ToastContextProvider";
 
 const rootElement = document.getElementById("root");
 if (rootElement) {

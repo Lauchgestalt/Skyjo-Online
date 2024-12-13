@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { default as CardComponent } from './Card';
 
@@ -45,16 +44,16 @@ interface GridProps {
   own?: boolean;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Grid = ({ cardArray, onClick, state, own = false }: GridProps) => {
   const generateEmptyGrid = () => {
-    let cardArray = [];
+    const cardArray = [];
     for (let i = 0; i < 12; i++) {
       cardArray.push({ id: i.toString(), text: i, isVisible: false });
     }
     return cardArray;
   };
 
-  console.log(own);
   if (!state) throw new Error('State is required');
 
   return (

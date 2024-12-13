@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -137,9 +137,7 @@ const ToastDismissButton = styled.button`
   cursor: pointer;
 `;
 
-interface ToastProps extends ToastType { }
-
-const Toast = ({ message, type, id }: ToastProps) => {
+const Toast = ({ message, type, id }: ToastType) => {
   const [dismissed, setDismissed] = useState(false);
 
   const { icon, iconClass } = toastTypes[type as keyof typeof toastTypes];
@@ -182,7 +180,7 @@ const Toast = ({ message, type, id }: ToastProps) => {
     }, 4000);
 
     return () => clearTimeout(timerID.current);
-  }, []);
+  });
 
   return (
     <ToastComponent

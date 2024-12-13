@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 
 import { Spinner } from "react-bootstrap";
@@ -226,7 +226,7 @@ const Lobby = () => {
         return () => {
             socket.off("updateGameState");
         };
-    }, []);
+    }, [navigate]);
 
     const selectedCardsHandler = (id: number) => {
         if (id > 12 || id < 0) {
